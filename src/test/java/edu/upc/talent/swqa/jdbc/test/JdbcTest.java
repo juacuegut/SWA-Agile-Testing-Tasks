@@ -1,4 +1,4 @@
-package edu.upc.talent.swqa.test;
+package edu.upc.talent.swqa.jdbc.test;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static edu.upc.talent.swqa.jdbc.Param.p;
-import static edu.upc.talent.swqa.test.Utils.initTemplateDatabase;
-import static edu.upc.talent.swqa.test.Utils.withTestDatabase;
+import static edu.upc.talent.swqa.jdbc.test.Utils.initTemplateDatabase;
+import static edu.upc.talent.swqa.jdbc.test.Utils.withTestDatabase;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class JdbcTest {
