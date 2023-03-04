@@ -1,42 +1,64 @@
 package edu.upc.talent.swqa.jdbc;
 
-import edu.upc.talent.swqa.functions.Consumer3;
-
+import java.net.URI;
 import java.sql.PreparedStatement;
-
-import static edu.upc.talent.swqa.functions.Utils.failOnException;
+import java.sql.SQLException;
+import java.time.Instant;
 
 @FunctionalInterface
 public interface Param {
-  void set(PreparedStatement ps, int i) throws Exception;
+  void set(PreparedStatement ps, int i) throws SQLException;
 
   static Param p(Integer value) {
-    return param(value, PreparedStatement::setInt);
+    return (ps, i) -> ps.setInt(i, value);
+  }
+
+  static Param p(int value) {
+    return (ps, i) -> ps.setInt(i, value);
   }
 
   static Param p(String value) {
-    return param(value, PreparedStatement::setString);
+    return (ps, i) -> ps.setString(i, value);
   }
 
   static Param p(Boolean value) {
-    return param(value, PreparedStatement::setBoolean);
+    return (ps, i) -> ps.setBoolean(i, value);
+  }
+
+  static Param p(boolean value) {
+    return (ps, i) -> ps.setBoolean(i, value);
   }
 
   static Param p(Double value) {
-    return param(value, PreparedStatement::setDouble);
+    return (ps, i) -> ps.setDouble(i, value);
+  }
+
+  static Param p(double value) {
+    return (ps, i) -> ps.setDouble(i, value);
   }
 
   static Param p(Float value) {
-    return param(value, PreparedStatement::setFloat);
+    return (ps, i) -> ps.setFloat(i, value);
+  }
+
+  static Param p(float value) {
+    return (ps, i) -> ps.setFloat(i, value);
   }
 
   static Param p(Long value) {
-    return param(value, PreparedStatement::setLong);
+    return (ps, i) -> ps.setLong(i, value);
   }
 
-  private static <A> Param param(A value, Consumer3<PreparedStatement, Integer, A> psFunction) {
-    return (ps, i) -> failOnException(() -> psFunction.apply(ps, i, value));
+  static Param p(long value) {
+    return (ps, i) -> ps.setLong(i, value);
+  }
+
+  static Param p(URI value) {
+    return (ps, i) -> ps.setString(i, value.toString());
+  }
+
+  static Param p(Instant value) {
+    return (ps, i) -> ps.setTimestamp(i, java.sql.Timestamp.from(value));
   }
 
 }
-

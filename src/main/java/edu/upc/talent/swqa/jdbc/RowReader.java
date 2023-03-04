@@ -1,7 +1,8 @@
 package edu.upc.talent.swqa.jdbc;
 
-import edu.upc.talent.swqa.functions.Function1;
+import java.sql.SQLException;
 
 @FunctionalInterface
-public interface RowReader<A> extends Function1<ResultSetView, A> {
+public interface RowReader<A> {
+  A apply(ResultSetView rs) throws SQLException;
 }

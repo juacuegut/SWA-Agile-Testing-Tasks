@@ -4,7 +4,7 @@ import edu.upc.talent.swqa.jdbc.Jdbc;
 
 import javax.sql.DataSource;
 
-import static edu.upc.talent.swqa.functions.Utils.eq;
+import static edu.upc.talent.swqa.util.Utils.eq;
 import static edu.upc.talent.swqa.jdbc.Param.p;
 
 public final class App {
@@ -14,7 +14,7 @@ public final class App {
 
   private final Jdbc jdbc;
 
-  public void setEmail(String email, String subject, String body) {
+  public void sendEmail(String email, String subject, String body) {
     System.out.println("To " + email + "\nSubject: " + subject + "\nBody:\n" + body + "\n");
   }
 
@@ -40,7 +40,7 @@ public final class App {
                 )
           );
     users.forEach(u -> {
-      if (eq(u.role(), "teacher")) setEmail(u.email(), subject, body);
+      if (eq(u.role(), "teacher")) sendEmail(u.email(), subject, body);
     });
 
   }

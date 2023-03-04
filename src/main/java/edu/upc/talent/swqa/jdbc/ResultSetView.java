@@ -1,50 +1,84 @@
 package edu.upc.talent.swqa.jdbc;
 
-import edu.upc.talent.swqa.functions.Function0;
-import edu.upc.talent.swqa.functions.Utils;
-
+import java.net.URI;
 import java.sql.ResultSet;
-
-import static edu.upc.talent.swqa.functions.Utils.failOnException;
+import java.sql.SQLException;
+import java.time.Instant;
 
 public class ResultSetView {
+
+  private final ResultSet resultSet;
 
   public ResultSetView(ResultSet resultSet) {
     this.resultSet = resultSet;
   }
 
-  private final ResultSet resultSet;
-
-  private boolean wasNull() {
-    return Utils.failOnException(resultSet::wasNull);
+  public Boolean getBoolean(int column) throws SQLException{
+    var res = resultSet.getBoolean(column);
+    return resultSet.wasNull() ? null : res;
   }
 
-  private <A> A getPrimitive(Function0<A> f) {
-    var result = Utils.failOnException(f);
-    return wasNull() ? null : result;
+  public boolean getBool(int column) throws SQLException{
+    var res = resultSet.getBoolean(column);
+    if(resultSet.wasNull()) throw new SQLException("Column " + column + " is null");
+    return res;
   }
 
-  public Boolean getBoolean(int column) {
-    return getPrimitive(() -> resultSet.getBoolean(column));
+  public String getString(int column) throws SQLException {
+      return resultSet.getString(column);
   }
 
-  public String getString(int column) {
-    return Utils.failOnException(() -> resultSet.getString(column));
+  public Integer getInteger(int column)throws SQLException{
+    var res = resultSet.getInt(column);
+    return resultSet.wasNull() ? null : res;
   }
 
-  public Integer getInt(int column) {
-    return getPrimitive(() -> resultSet.getInt(column));
+  public int getInt(int column) throws SQLException{
+    var res = resultSet.getInt(column);
+    if(resultSet.wasNull()) throw new SQLException("Column " + column + " is null");
+    return res;
   }
 
-  public Long getLong(int column) {
-    return getPrimitive(() -> resultSet.getLong(column));
+  public Long getLong(int column)throws SQLException{
+    var res = resultSet.getLong(column);
+    return resultSet.wasNull() ? null : res;
   }
 
-  public Double getDouble(int column) {
-    return getPrimitive(() -> resultSet.getDouble(column));
+  public long getLongPrimitive(int column) throws SQLException{
+    var res = resultSet.getLong(column);
+    if(resultSet.wasNull()) throw new SQLException("Column " + column + " is null");
+    return res;
   }
 
-  public Float getFloat(int column) {
-    return getPrimitive(() -> resultSet.getFloat(column));
+  public Double getDouble(int column)throws SQLException{
+    var res = resultSet.getDouble(column);
+    return resultSet.wasNull() ? null : res;
+  }
+
+  public double getDoublePrimitive(int column) throws SQLException{
+    var res = resultSet.getDouble(column);
+    if(resultSet.wasNull()) throw new SQLException("Column " + column + " is null");
+    return res;
+  }
+
+  public Float getFloat(int column)throws SQLException{
+    var res = resultSet.getFloat(column);
+    return resultSet.wasNull() ? null : res;
+  }
+
+  public float getFloatPrimitive(int column) throws SQLException{
+    var res = resultSet.getFloat(column);
+    if(resultSet.wasNull()) throw new SQLException("Column " + column + " is null");
+    return res;
+  }
+
+  public URI getURI(int column) throws SQLException {
+    var res = resultSet.getString(column);
+    return resultSet.wasNull() ? null : URI.create(res);
+  }
+
+  public Instant getInstant(int column) throws SQLException {
+    var res = resultSet.getTimestamp(column);
+    return resultSet.wasNull() ? null : res.toInstant();
   }
 }
