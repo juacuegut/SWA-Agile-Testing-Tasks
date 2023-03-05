@@ -1,9 +1,9 @@
-package edu.upc.talent.swqa.campus;
+package edu.upc.talent.swqa.campus.infrastructure;
 
 public class UsersDb {
   public static final String usersTableDml =
         """
-        create table users (
+        create table if not exists users (
             id serial primary key,
             name text not null,
             surname text not null,
@@ -17,7 +17,7 @@ public class UsersDb {
 
   public static final String groupsTableDml =
         """
-        create table groups (
+        create table if not exists groups (
             id serial primary key,
             name text not null
         )

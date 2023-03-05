@@ -1,7 +1,9 @@
 package edu.upc.talent.swqa.campus.test;
 
-import edu.upc.talent.swqa.campus.CampusApp;
-import edu.upc.talent.swqa.campus.UsersDb;
+import edu.upc.talent.swqa.campus.domain.CampusApp;
+import edu.upc.talent.swqa.campus.infrastructure.ConsoleEmailSender;
+import edu.upc.talent.swqa.campus.infrastructure.PostgreSqlUsersRepository;
+import edu.upc.talent.swqa.campus.infrastructure.UsersDb;
 import edu.upc.talent.swqa.jdbc.test.JdbcTest;
 import edu.upc.talent.swqa.jdbc.test.ThrowingConsumer;
 import org.junit.jupiter.api.BeforeAll;
@@ -9,22 +11,22 @@ import org.junit.jupiter.api.Test;
 
 import static edu.upc.talent.swqa.jdbc.test.Utils.*;
 
-public class CampusTest {
+public class CampusAppEndToEndTest {
 
   private static String templateDatabaseName = JdbcTest.class.getSimpleName().toLowerCase();
 
   @BeforeAll
   public static void setup() {
     initTemplateDatabase(templateDatabaseName, (db) -> {
-      db.update(UsersDb.groupsTableDml);
-      db.update(UsersDb.usersTableDml);
+            db.update(UsersDb.groupsTableDml);
+            db.update(UsersDb.usersTableDml);
           }
     );
   }
 
   private void test(String testName, ThrowingConsumer<CampusApp> test) {
     withTestDatabase(templateDatabaseName, testName, (db) -> {
-      var app = new CampusApp(db);
+      var app = new CampusApp(new PostgreSqlUsersRepository(db), new ConsoleEmailSender());
       app.createGroup("swqa");
       app.createUser("John", "Doe", "john.doe@example.com", "student", "swqa");
       app.createUser("Jane", "Doe", "jane.doe@example.com", "student", "swqa");
