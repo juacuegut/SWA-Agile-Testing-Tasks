@@ -1,6 +1,10 @@
 package edu.upc.talent.swqa.campus.test;
 
 import edu.upc.talent.swqa.campus.domain.CampusApp;
+import edu.upc.talent.swqa.campus.test.utils.CampusAppState;
+import edu.upc.talent.swqa.campus.test.utils.InMemoryEmailSender;
+import edu.upc.talent.swqa.campus.test.utils.InMemoryUsersRepository;
+import edu.upc.talent.swqa.campus.test.utils.SentEmail;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;

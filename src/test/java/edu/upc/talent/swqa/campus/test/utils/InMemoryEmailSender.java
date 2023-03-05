@@ -1,6 +1,7 @@
-package edu.upc.talent.swqa.campus.test;
+package edu.upc.talent.swqa.campus.test.utils;
 
 import edu.upc.talent.swqa.campus.domain.EmailSender;
+import edu.upc.talent.swqa.campus.test.utils.SentEmail;
 
 import java.util.List;
 
