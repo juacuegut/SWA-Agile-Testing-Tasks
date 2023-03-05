@@ -17,7 +17,6 @@ public class InMemoryUsersRepository implements UsersRepository {
   public void createUser(String name, String surname, String email, String role, String groupName) {
     Integer id = state.users().size() + 1;
     var user = new User(id.toString(), name, surname, email, role, groupName);
-    assert state.groups().stream().anyMatch(group -> group.name().equals(groupName));
     state.users().add(user);
   }
 

@@ -18,11 +18,11 @@ import static edu.upc.talent.swqa.util.Utils.join;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class UsersRepositoryStateGetter {
+class PostgresQlUsersRepositoryStateGetter implements UsersRepositoryStateGetter {
 
   private final Jdbc db;
 
-  public UsersRepositoryStateGetter(Jdbc db) {
+  public PostgresQlUsersRepositoryStateGetter(Jdbc db) {
     this.db = db;
   }
 
@@ -64,7 +64,10 @@ public class PostgreSqlUsersRepositoryTest {
 
   private void test(String testName, BiConsumer<UsersRepository, UsersRepositoryStateGetter> test) {
     withTestDatabase(templateDatabaseName, testName, (db) -> {
-      var stateGetter = new UsersRepositoryStateGetter(db);
+//      var state = new UsersRepositoryState();
+//      UsersRepositoryStateGetter stateGetter = () -> state;
+//      var repository = new InMemoryUsersRepository(state);
+      var stateGetter = new PostgresQlUsersRepositoryStateGetter(db);
       var repository = new PostgreSqlUsersRepository(db);
       repository.createGroup("swqa");
       initialUsers.forEach((user) ->
@@ -84,7 +87,7 @@ public class PostgreSqlUsersRepositoryTest {
   public void testGetUsersByGroup() {
     test("testGetUsersByGroup", (repository, stateGetter) -> {
       var actual = repository.getUsersByGroup("swqa");
-      assertEquals(initialUsers, actual);
+      assertEquals(new HashSet<>(initialUsers), new HashSet<>(actual));
     });
   }
 
