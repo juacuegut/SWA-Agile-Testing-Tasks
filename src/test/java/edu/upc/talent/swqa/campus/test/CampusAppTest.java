@@ -1,6 +1,7 @@
 package edu.upc.talent.swqa.campus.test;
 
 import edu.upc.talent.swqa.campus.domain.CampusApp;
+import edu.upc.talent.swqa.campus.domain.User;
 import edu.upc.talent.swqa.campus.test.utils.CampusAppState;
 import edu.upc.talent.swqa.campus.test.utils.InMemoryEmailSender;
 import edu.upc.talent.swqa.campus.test.utils.InMemoryUsersRepository;
@@ -8,6 +9,7 @@ import edu.upc.talent.swqa.campus.test.utils.SentEmail;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
@@ -16,15 +18,19 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 public class CampusAppTest {
 
+  List<User> initialUsers = List.of(
+        new User(null, "John", "Doe", "john.doe@example.com", "student", "swqa"),
+        new User(null, "Jane", "Doe", "jane.doe@example.com", "student", "swqa"),
+        new User(null, "Mariah", "Hairam", "mariah.hairam@example.com", "teacher", "swqa")
+  );
+
   private void test(BiConsumer<CampusAppState, CampusApp> test) {
     var campusAppState = new CampusAppState();
     var usersRepository = new InMemoryUsersRepository(campusAppState.usersRepository());
     var emailSender = new InMemoryEmailSender(campusAppState.sentEmails());
     var app = new CampusApp(usersRepository, emailSender);
     app.createGroup("swqa");
-    app.createUser("John", "Doe", "john.doe@example.com", "student", "swqa");
-    app.createUser("Jane", "Doe", "jane.doe@example.com", "student", "swqa");
-    app.createUser("Mariah", "Hairam", "mariah.hairam@example.com", "teacher", "swqa");
+    initialUsers.forEach(u -> app.createUser(u.name(), u.surname(), u.email(), u.role(), u.groupName()));
     try {
       test.accept(campusAppState, app);
     } catch (Exception e) {
