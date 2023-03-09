@@ -2,7 +2,7 @@ package edu.upc.talent.swqa.campus.infrastructure;
 
 import edu.upc.talent.swqa.campus.domain.User;
 import edu.upc.talent.swqa.campus.domain.UsersRepository;
-import edu.upc.talent.swqa.jdbc.Jdbc;
+import edu.upc.talent.swqa.jdbc.Database;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -12,9 +12,9 @@ import static edu.upc.talent.swqa.util.Utils.eq;
 
 public class PostgreSqlUsersRepository implements UsersRepository {
 
-  private final Jdbc db;
+  private final Database db;
 
-  public PostgreSqlUsersRepository(Jdbc db) {
+  public PostgreSqlUsersRepository(Database db) {
     this.db = db;
   }
 

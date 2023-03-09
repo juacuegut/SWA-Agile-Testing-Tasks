@@ -2,10 +2,8 @@ package edu.upc.talent.swqa.jdbc;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
@@ -41,11 +39,11 @@ public class ConnectionScope {
     }
   }
 
-  public <K> K insertAndGetKey(String sql, RowReader<K> keyReader,  Param... params) {
+  public <K> K insertAndGetKey(String sql, RowReader<K> keyReader, Param... params) {
     try (var stmt = connection.prepareStatement(sql, RETURN_GENERATED_KEYS)) {
       for (int i = 0; i < params.length; i++) params[i].set(stmt, i + 1);
       stmt.executeUpdate();
-      try(var keys = stmt.getGeneratedKeys()){
+      try (var keys = stmt.getGeneratedKeys()) {
         keys.next();
         return keyReader.apply(new ResultSetView(keys));
       }

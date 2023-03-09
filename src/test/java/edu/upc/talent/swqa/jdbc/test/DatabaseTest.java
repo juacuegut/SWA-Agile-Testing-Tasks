@@ -1,31 +1,23 @@
 package edu.upc.talent.swqa.jdbc.test;
 
-import org.junit.jupiter.api.BeforeAll;
+import edu.upc.talent.swqa.jdbc.Database;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static edu.upc.talent.swqa.jdbc.Param.p;
-import static edu.upc.talent.swqa.jdbc.test.Utils.initTemplateDatabase;
-import static edu.upc.talent.swqa.jdbc.test.Utils.withTestDatabase;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class JdbcTest {
+public class DatabaseTest extends edu.upc.talent.swqa.test.utils.DatabaseTest {
 
-  private static String templateDatabaseName = JdbcTest.class.getSimpleName().toLowerCase();
-
-  @BeforeAll
-  public static void setup() {
-    initTemplateDatabase(templateDatabaseName, (db) ->
-          db.withConnection((conn) ->
-                conn.update("CREATE TABLE users(id SERIAL PRIMARY KEY, name TEXT, email TEXT)")
-          )
-    );
+  @Override
+  protected void setUpDatabaseSchema(Database db) {
+    db.update("CREATE TABLE users(id SERIAL PRIMARY KEY, name TEXT, email TEXT)");
   }
 
   @Test
   public void testInsertAndSelect() {
-    withTestDatabase(templateDatabaseName, "test_select", (db) -> {
+    databaseTestVoid("testSelect", (db) -> {
       db.update("INSERT INTO users(name, email) VALUES(?,?)", p("John"), p("john@example.com"));
       var actual = db.select(
             "select name, email from users where name = ?",
@@ -38,7 +30,7 @@ public class JdbcTest {
 
   @Test
   public void testInsertAndGetKey() {
-    withTestDatabase(templateDatabaseName, "testInsertAndGetKey", (db) -> {
+    databaseTestVoid("testInsertAndGetKey", (db) -> {
       var key = db.insertAndGetKey(
             "INSERT INTO users(name, email) VALUES(?,?)",
             (rs) -> rs.getInt(1),

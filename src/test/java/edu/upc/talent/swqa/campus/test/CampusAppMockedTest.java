@@ -4,15 +4,11 @@ import edu.upc.talent.swqa.campus.domain.CampusApp;
 import edu.upc.talent.swqa.campus.domain.EmailSender;
 import edu.upc.talent.swqa.campus.domain.User;
 import edu.upc.talent.swqa.campus.domain.UsersRepository;
-import edu.upc.talent.swqa.campus.test.utils.SentEmail;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.function.BiConsumer;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 

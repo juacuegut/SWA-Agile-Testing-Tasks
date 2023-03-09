@@ -9,4 +9,8 @@ public record UsersRepositoryState(Set<User> users, Set<Group> groups) {
   public UsersRepositoryState() {
     this(new HashSet<>(), new HashSet<>());
   }
+
+  public UsersRepositoryState copy() {
+    return new UsersRepositoryState(new HashSet<>(users), new HashSet<>(groups));
+  }
 }

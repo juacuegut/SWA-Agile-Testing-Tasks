@@ -2,7 +2,6 @@ package edu.upc.talent.swqa.campus.test.utils;
 
 import edu.upc.talent.swqa.campus.domain.User;
 import edu.upc.talent.swqa.campus.domain.UsersRepository;
-import edu.upc.talent.swqa.campus.test.utils.UsersRepositoryState;
 
 import java.util.List;
 
