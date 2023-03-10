@@ -9,6 +9,7 @@ import edu.upc.talent.swqa.campus.test.utils.InMemoryUsersRepository;
 import edu.upc.talent.swqa.campus.test.utils.SentEmail;
 import edu.upc.talent.swqa.campus.test.utils.UsersRepositoryState;
 import edu.upc.talent.swqa.test.utils.Asserts;
+import edu.upc.talent.swqa.util.Utils;
 import org.junit.jupiter.api.Test;
 
 import java.util.Set;
@@ -37,9 +38,22 @@ public final class CampusAppTest {
     this.app = new CampusApp(usersRepository, emailSender);
   }
 
-
   private void assertFinalState(final CampusAppState expectedFinalState) {
     Asserts.assertEquals(expectedFinalState, state);
+  }
+
+  @Test
+  public void testCreateGroup() {
+    setInitialState(defaultInitialState);
+    app.createGroup("bigdata");
+    final var expectedFinalState = new CampusAppState(
+          new UsersRepositoryState(
+                defaultInitialState.usersRepositoryState().users(),
+                Utils.union(defaultInitialState.usersRepositoryState().groups(), Set.of(new Group(2, "bigdata")))
+          ),
+          defaultInitialState.sentEmails()
+    );
+    assertFinalState(expectedFinalState);
   }
 
   @Test

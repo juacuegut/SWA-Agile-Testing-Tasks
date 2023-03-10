@@ -13,7 +13,7 @@ import org.junit.runner.Description;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class DatabaseTest {
+public abstract class DatabaseBackedTest {
 
   protected Database db;
 

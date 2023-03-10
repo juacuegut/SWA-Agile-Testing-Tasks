@@ -3,7 +3,7 @@ package edu.upc.talent.swqa.jdbc.test;
 import static edu.upc.talent.swqa.jdbc.Param.p;
 import edu.upc.talent.swqa.jdbc.RowReader;
 import static edu.upc.talent.swqa.test.utils.Asserts.assertEquals;
-import edu.upc.talent.swqa.test.utils.DatabaseTest;
+import edu.upc.talent.swqa.test.utils.DatabaseBackedTest;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,7 +12,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Set;
 
-public final class DatabaseUtilsTest extends DatabaseTest {
+public final class DatabaseTest extends DatabaseBackedTest {
 
   @BeforeEach
   public void setUpDatabaseSchema() {

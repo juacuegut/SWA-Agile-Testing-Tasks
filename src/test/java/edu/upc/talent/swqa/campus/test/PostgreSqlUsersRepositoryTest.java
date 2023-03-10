@@ -6,11 +6,11 @@ import edu.upc.talent.swqa.campus.infrastructure.PostgreSqlUsersRepository;
 import edu.upc.talent.swqa.campus.infrastructure.UsersDb;
 import edu.upc.talent.swqa.campus.test.utils.Group;
 import edu.upc.talent.swqa.campus.test.utils.UsersRepositoryState;
-import edu.upc.talent.swqa.test.utils.DatabaseTest;
+import edu.upc.talent.swqa.test.utils.DatabaseBackedTest;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 
-public final class PostgreSqlUsersRepositoryTest extends DatabaseTest implements UsersRepositoryTest {
+public final class PostgreSqlUsersRepositoryTest extends DatabaseBackedTest implements UsersRepositoryTest {
 
   private PostgreSqlUsersRepository repository;
 

@@ -4,11 +4,11 @@ import edu.upc.talent.swqa.campus.domain.CampusApp;
 import edu.upc.talent.swqa.campus.infrastructure.ConsoleEmailSender;
 import edu.upc.talent.swqa.campus.infrastructure.PostgreSqlUsersRepository;
 import edu.upc.talent.swqa.campus.infrastructure.UsersDb;
-import edu.upc.talent.swqa.test.utils.DatabaseTest;
+import edu.upc.talent.swqa.test.utils.DatabaseBackedTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public final class CampusAppEndToEndTest extends DatabaseTest {
+public final class CampusAppEndToEndTest extends DatabaseBackedTest {
 
   private CampusApp app;
 
