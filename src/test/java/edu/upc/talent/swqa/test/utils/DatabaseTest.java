@@ -1,77 +1,70 @@
 package edu.upc.talent.swqa.test.utils;
 
 import edu.upc.talent.swqa.jdbc.Database;
-import org.junit.jupiter.api.BeforeEach;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Function;
-
 import static edu.upc.talent.swqa.jdbc.HikariCP.getDataSource;
 import static edu.upc.talent.swqa.test.utils.ConsoleUtils.printAlignedTable;
 import static edu.upc.talent.swqa.util.Utils.join;
+import org.junit.Rule;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class DatabaseTest {
 
-//  protected String templateDatabaseName = getClass().getSimpleName().toLowerCase();
-//
-//  @BeforeEach
-//  public void setup() {
-//    withDatabaseVoid(null, (jdbc) -> jdbc.withConnectionVoid((conn) -> {
-//      conn.update("DROP DATABASE IF EXISTS " + templateDatabaseName);
-//      conn.update("CREATE DATABASE " + templateDatabaseName);
-//    }));
-//    withDatabaseVoid(templateDatabaseName, (db) -> setUpDatabaseSchema(db));
-//  }
+  protected Database db;
 
-  public void beforeEach(Database db) {
+  @BeforeEach
+  public final void setUpDatabase() {
+    final var databaseName = this.getClass().getSimpleName().toLowerCase();
+    try (final var db = new Database(getDataSource("jdbc:postgresql:///", "postgres", "postgres"))) {
+      db.withConnection((conn) -> {
+        conn.update("DROP DATABASE IF EXISTS " + databaseName);
+        conn.update("CREATE DATABASE " + databaseName);
+      });
+    } catch (final Exception e) {
+      throw new RuntimeException(e);
+    }
+
+    this.db = new Database(getDataSource("jdbc:postgresql:///" + databaseName, "postgres", "postgres"));
   }
 
-  protected abstract void setUpDatabaseSchema(Database db);
-
-  public void databaseTestVoid(String databaseName, Consumer<Database> f) {
-    databaseTest(databaseName, (db) -> {
-      f.accept(db);
-      return null;
-    });
+  @AfterEach
+  public final void afterEach() throws Exception {
+    if (this.db != null) this.db.close();
   }
 
-  public <A> A databaseTest(String databaseName, Function<Database, A> f) {
-    var actualDatabaseName = databaseName.toLowerCase();
-    withDatabaseVoid(null, (db) -> db.withConnection((conn) -> {
-      conn.update("DROP DATABASE IF EXISTS " + actualDatabaseName);
-      var res = conn.update("CREATE DATABASE " + actualDatabaseName);
-      return res;
-    }));
-    return withDatabase(actualDatabaseName, (db) -> {
-      setUpDatabaseSchema(db);
-      beforeEach(db);
-      try {
-        return f.apply(db);
-      } catch (Exception e) {
-        System.out.println("Test failed! Here you have the DB contents for debugging:");
-        printDbContents(db);
-        throw e;
-      }
-    });
-  }
+  @Rule
+  public final TestWatcher watchman = new TestWatcher() {
+    @Override
+    protected void failed(final Throwable e, final Description description) {
+      System.out.println("Database contents: ");
+      printDbContents();
+    }
+
+  };
 
 
-  private static void printDbContents(Database database) {
-    var tables = database.select("SELECT table_name, table_schema FROM information_schema.tables where table_schema = 'public'", (rs) ->
-          rs.getString(1)
+  private void printDbContents() {
+    final var tables = db.select(
+          "SELECT table_name, table_schema FROM information_schema.tables where table_schema = 'public'",
+          (rs) -> rs.getString(1)
     );
-    tables.forEach((table) -> printTableContents(database, table));
+    tables.forEach(this::printTableContents);
   }
 
-  private static void printTableContents(Database database, String tableName) {
-    var columns = database.select("SELECT column_name FROM information_schema.columns WHERE table_name = '" + tableName + "'", (rs) ->
-          rs.getString(1)
+  private void printTableContents(final String tableName) {
+    final var columns = db.select(
+          "SELECT column_name FROM information_schema.columns WHERE table_name = '" + tableName + "'",
+          (rs) ->
+                rs.getString(1)
     );
-    var columnNames = String.join(", ", columns);
-    var rows = database.select("SELECT " + columnNames + " FROM " + tableName, (rs) -> {
-      List<String> row = new ArrayList<>();
+    final var columnNames = String.join(", ", columns);
+    final var rows = db.select("SELECT " + columnNames + " FROM " + tableName, (rs) -> {
+      final List<String> row = new ArrayList<>();
       for (int i = 1; i <= columns.size(); i++) {
         row.add(rs.getString(i));
       }
@@ -80,22 +73,6 @@ public abstract class DatabaseTest {
     System.out.println(tableName + ":");
     printAlignedTable(join(List.of(columns), rows));
     System.out.println();
-  }
-
-  private static void withDatabaseVoid(String databaseName, Consumer<Database> f) {
-    withDatabase(databaseName, (db) -> {
-      f.accept(db);
-      return null;
-    });
-  }
-
-  private static <A> A withDatabase(String databaseName, Function<Database, A> f) {
-    var jdbcUrl = "jdbc:postgresql:///" + (databaseName == null ? "" : databaseName);
-    try (var ds = getDataSource(jdbcUrl, "postgres", "postgres")) {
-      return f.apply(new Database(ds));
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
   }
 
 }

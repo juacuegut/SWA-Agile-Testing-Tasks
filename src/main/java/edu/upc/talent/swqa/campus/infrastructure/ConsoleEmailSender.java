@@ -2,9 +2,9 @@ package edu.upc.talent.swqa.campus.infrastructure;
 
 import edu.upc.talent.swqa.campus.domain.EmailSender;
 
-public class ConsoleEmailSender implements EmailSender {
+public final class ConsoleEmailSender implements EmailSender {
   @Override
-  public void sendEmail(String email, String subject, String body) {
+  public void sendEmail(final String email, final String subject, final String body) {
     System.out.println("To: " + email + "\nSubject: " + subject + "\nBody:\n" + body + "\n");
   }
 }

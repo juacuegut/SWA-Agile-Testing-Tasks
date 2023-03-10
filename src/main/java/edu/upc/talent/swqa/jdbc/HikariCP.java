@@ -4,8 +4,11 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 public final class HikariCP {
-  public static HikariDataSource getDataSource(String jdbcUrl, String username, String password) {
-    var config = new HikariConfig();
+
+  private HikariCP() {}
+
+  public static HikariDataSource getDataSource(final String jdbcUrl, final String username, final String password) {
+    final var config = new HikariConfig();
     config.setJdbcUrl(jdbcUrl);
     config.setUsername(username);
     config.setPassword(password);
@@ -15,6 +18,5 @@ public final class HikariCP {
     config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
     return new HikariDataSource(config);
   }
-
 
 }

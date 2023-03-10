@@ -4,15 +4,17 @@ import edu.upc.talent.swqa.campus.domain.UsersRepository;
 import edu.upc.talent.swqa.campus.test.utils.InMemoryUsersRepository;
 import edu.upc.talent.swqa.campus.test.utils.UsersRepositoryState;
 
-import java.util.function.Consumer;
+public final class InMemoryUsersRepositoryTest implements UsersRepositoryTest {
 
-class InMemoryUsersRepositoryTest implements UsersRepositoryTest {
+  private final InMemoryUsersRepository repository = new InMemoryUsersRepository(new UsersRepositoryState());
 
   @Override
-  public UsersRepositoryState testAndGetFinalState(String testName, UsersRepositoryState initialState, Consumer<UsersRepository> test) {
-    var state = initialState.copy();
-    var repository = new InMemoryUsersRepository(state);
-    test.accept(repository);
-    return state;
+  public UsersRepository getRepository() {
+    return repository;
+  }
+
+  @Override
+  public UsersRepositoryState getUsersRepositoryState() {
+    return repository.state();
   }
 }

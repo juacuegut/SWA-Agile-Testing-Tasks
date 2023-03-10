@@ -3,10 +3,17 @@ package edu.upc.talent.swqa.campus.domain;
 import java.util.List;
 
 public interface UsersRepository {
-  void createUser(String name, String surname, String email, String role, String groupName);
-  void createGroup(String name);
+  void createUser(
+        final String name,
+        final String surname,
+        final String email,
+        final String role,
+        final String groupName
+  );
 
-  List<User> getUsersByGroupAndRole(String groupName, String onlyRole);
+  void createGroup(final String name);
 
-  List<User> getUsersByGroup(String groupName);
+  List<User> getUsersByGroupAndRole(final String groupName, final String onlyRole);
+
+  List<User> getUsersByGroup(final String groupName);
 }

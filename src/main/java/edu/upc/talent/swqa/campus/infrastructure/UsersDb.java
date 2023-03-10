@@ -1,6 +1,8 @@
 package edu.upc.talent.swqa.campus.infrastructure;
 
-public class UsersDb {
+public final class UsersDb {
+
+  private UsersDb() {}
   public static final String usersTableDml =
         """
         create table if not exists users (

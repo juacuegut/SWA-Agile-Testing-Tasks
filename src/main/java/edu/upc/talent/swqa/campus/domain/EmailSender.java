@@ -1,5 +1,5 @@
 package edu.upc.talent.swqa.campus.domain;
 
 public interface EmailSender {
-  void sendEmail(String email, String subject, String body);
+  void sendEmail(final String email, final String subject, final String body);
 }

@@ -2,18 +2,18 @@ package edu.upc.talent.swqa.campus.test.utils;
 
 import edu.upc.talent.swqa.campus.domain.EmailSender;
 
-import java.util.List;
+import java.util.Set;
 
-public class InMemoryEmailSender implements EmailSender {
+public final class InMemoryEmailSender implements EmailSender {
 
-  private List<SentEmail> sentEmails;
+  private final Set<SentEmail> sentEmails;
 
-  public InMemoryEmailSender(List<SentEmail> sentEmails) {
+  public InMemoryEmailSender(final Set<SentEmail> sentEmails) {
     this.sentEmails = sentEmails;
   }
 
   @Override
-  public void sendEmail(String email, String subject, String body) {
+  public void sendEmail(final String email, final String subject, final String body) {
     sentEmails.add(new SentEmail(email, subject, body));
   }
 

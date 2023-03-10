@@ -5,38 +5,38 @@ import edu.upc.talent.swqa.campus.domain.UsersRepository;
 
 import java.util.List;
 
-public class InMemoryUsersRepository implements UsersRepository {
-
-  private UsersRepositoryState state;
-
-  public InMemoryUsersRepository(UsersRepositoryState state) {
-    this.state = state;
-  }
+public record InMemoryUsersRepository(UsersRepositoryState state) implements UsersRepository {
 
   @Override
-  public void createUser(String name, String surname, String email, String role, String groupName) {
-    Integer id = state.users().size() + 1;
-    var user = new User(id.toString(), name, surname, email, role, groupName);
+  public void createUser(
+        final String name,
+        final String surname,
+        final String email,
+        final String role,
+        final String groupName
+  ) {
+    final var id = state.users().size() + 1;
+    final var user = new User("" + id, name, surname, email, role, groupName);
     state.users().add(user);
   }
 
   @Override
-  public void createGroup(String name) {
-    Integer id = state.groups().size() + 1;
+  public void createGroup(final String name) {
+    final var id = state.groups().size() + 1;
     state.groups().add(new Group(id, name));
   }
 
   @Override
-  public List<User> getUsersByGroupAndRole(String groupName, String onlyRole) {
+  public List<User> getUsersByGroupAndRole(final String groupName, final String onlyRole) {
     return state.users().stream()
-          .filter(user -> user.groupName().equals(groupName) && user.role().equals(onlyRole))
-          .toList();
+                .filter(user -> user.groupName().equals(groupName) && user.role().equals(onlyRole))
+                .toList();
   }
 
   @Override
-  public List<User> getUsersByGroup(String groupName) {
+  public List<User> getUsersByGroup(final String groupName) {
     return state.users().stream()
-          .filter(user -> user.groupName().equals(groupName))
-          .toList();
+                .filter(user -> user.groupName().equals(groupName))
+                .toList();
   }
 }

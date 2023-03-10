@@ -9,64 +9,64 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public final class Database {
+public final class Database implements AutoCloseable {
 
   private final DataSource dataSource;
 
-  public Database(DataSource dataSource) {
+  public Database(final DataSource dataSource) {
     this.dataSource = dataSource;
   }
 
-  public void withConnectionVoid(Consumer<ConnectionScope> f){
-    withConnection((conn) -> {
+  public void withConnection(final Consumer<ConnectionScope> f) {
+    withConnectionGet((conn) -> {
       f.accept(conn);
       return null;
     });
   }
-  public <A> A withConnection(Function<ConnectionScope, A> f) {
-    try (Connection conn = dataSource.getConnection()) {
+
+  public <A> A withConnectionGet(final Function<ConnectionScope, A> f) {
+    try (final Connection conn = dataSource.getConnection()) {
       return f.apply(new ConnectionScope(conn));
-    } catch (SQLException e) {
+    } catch (final SQLException e) {
       throw new RuntimeException(e);
     }
   }
 
-  public void inTransactionVoid(Consumer<ConnectionScope> f){
-    inTransaction((conn) -> {
-      f.accept(conn);
-      return null;
-    });
-  }
-
-  public <A> A inTransaction(Function<ConnectionScope, A> f) {
-    try (Connection conn = dataSource.getConnection()) {
+  public <A> A inTransaction(final Function<ConnectionScope, A> f) {
+    try (final Connection conn = dataSource.getConnection()) {
       conn.setAutoCommit(false);
-      var res = f.apply(new ConnectionScope(conn));
+      final var res = f.apply(new ConnectionScope(conn));
       conn.commit();
       return res;
-    } catch (SQLException e) {
+    } catch (final SQLException e) {
       throw new RuntimeException(e);
     }
   }
 
-  public int update(String sql, Param... params) {
-    return withConnection((conn) -> conn.update(sql, params));
+  public int update(final String sql, final Param... params) {
+    return withConnectionGet((conn) -> conn.update(sql, params));
   }
 
 
-  public <A> Set<A> selectToSet(String sql, RowReader<A> reader, Param... params) {
+  public <A> Set<A> selectToSet(final String sql, final RowReader<A> reader, final Param... params) {
     return new HashSet<>(select(sql, reader, params));
   }
 
-  public <A> List<A> select(String sql, RowReader<A> reader, Param... params) {
-    return withConnection((conn) -> conn.select(sql, reader, params));
+  public <A> List<A> select(final String sql, final RowReader<A> reader, final Param... params) {
+    return withConnectionGet((conn) -> conn.select(sql, reader, params));
   }
 
-  public <A> A selectOne(String sql, RowReader<A> reader, Param... params) {
-    return withConnection((conn) -> conn.selectOne(sql, reader, params));
+  public <A> A selectOne(final String sql, final RowReader<A> reader, final Param... params) {
+    return withConnectionGet((conn) -> conn.selectOne(sql, reader, params));
   }
 
-  public <K> K insertAndGetKey(String sql, RowReader<K> keyReader,  Param... params) {
-    return withConnection((conn) -> conn.insertAndGetKey(sql, keyReader, params));
+  public <K> K insertAndGetKey(final String sql, final RowReader<K> keyReader, final Param... params) {
+    return withConnectionGet((conn) -> conn.insertAndGetKey(sql, keyReader, params));
+  }
+
+  @Override
+  public void close() throws Exception {
+    if (dataSource instanceof AutoCloseable)
+      ((AutoCloseable) dataSource).close();
   }
 }
