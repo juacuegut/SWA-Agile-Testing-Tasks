@@ -25,12 +25,14 @@ public interface UsersRepositoryTest {
     initialState.users()
                 .stream()
                 .sorted(Comparator.comparing(User::id))
-                .forEach((user) -> getRepository().createUser(user.name(),
-                                                              user.surname(),
-                                                              user.email(),
-                                                              user.role(),
-                                                              user.groupName()
-                ));
+                .forEach((user) ->
+                               getRepository().createUser(
+                                     user.name(),
+                                     user.surname(),
+                                     user.email(),
+                                     user.role(),
+                                     user.groupName()
+                               ));
   }
 
   default void assertExpectedFinalState(final UsersRepositoryState expectedFinalState) {
@@ -45,7 +47,6 @@ public interface UsersRepositoryTest {
         ),
         Set.of(new Group(1, "swqa"))
   );
-
 
   @Test
   default void testGetUsersByGroup() {
@@ -81,7 +82,6 @@ public interface UsersRepositoryTest {
     assertEquals("Group " + groupName + " does not exist", exception.getMessage());
     assertExpectedFinalState(defaultInitialState);
   }
-
 }
 
 
