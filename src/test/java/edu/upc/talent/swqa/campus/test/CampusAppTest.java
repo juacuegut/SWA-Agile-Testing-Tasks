@@ -8,17 +8,12 @@ import edu.upc.talent.swqa.campus.test.utils.InMemoryEmailSender;
 import edu.upc.talent.swqa.campus.test.utils.InMemoryUsersRepository;
 import edu.upc.talent.swqa.campus.test.utils.SentEmail;
 import edu.upc.talent.swqa.campus.test.utils.UsersRepositoryState;
-import edu.upc.talent.swqa.test.utils.Asserts;
-import edu.upc.talent.swqa.util.Utils;
+import static edu.upc.talent.swqa.test.utils.Asserts.assertEquals;
 import org.junit.jupiter.api.Test;
 
 import java.util.Set;
 
 public final class CampusAppTest {
-
-  private CampusAppState state;
-  private CampusApp app;
-
   private final CampusAppState defaultInitialState = new CampusAppState(
         new UsersRepositoryState(
               Set.of(
@@ -31,20 +26,35 @@ public final class CampusAppTest {
         Set.of()
   );
 
-  private void setInitialState(final CampusAppState initialState) {
-    this.state = initialState.copy();
-    final var usersRepository = new InMemoryUsersRepository(state.usersRepositoryState());
-    final var emailSender = new InMemoryEmailSender(state.sentEmails());
-    this.app = new CampusApp(usersRepository, emailSender);
+  private CampusApp setInitialState(final CampusAppState initialState) {
+    return new CampusApp(
+          new InMemoryUsersRepository(initialState.usersRepositoryState()),
+          new InMemoryEmailSender(initialState.sentEmails())
+    );
   }
 
-  private void assertFinalState(final CampusAppState expectedFinalState) {
-    Asserts.assertEquals(expectedFinalState, state);
+  @Test
+  public void testCreateGroup(){
+    final var state = new CampusAppState(
+          new UsersRepositoryState(Set.of(), Set.of(new Group(1, "swqa"))),
+          Set.of()
+    ).copy();
+    final var app = setInitialState(state);
+    app.createGroup("bigdata");
+    final var expectedFinalState = new CampusAppState(
+          new UsersRepositoryState(
+                Set.of(),
+                Set.of(new Group(1, "swqa"), new Group(2, "bigdata"))
+          ),
+          Set.of()
+    );
+    assertEquals(expectedFinalState, state);
   }
 
   @Test
   public void testSendEmailToGroup() {
-    setInitialState(defaultInitialState);
+    final var state = defaultInitialState.copy();
+    final var app = setInitialState(state);
     final var subject = "New campus!";
     final var body = "Hello everyone! We just created a new virtual campus!";
     app.sendMailToGroup("swqa", subject, body);
@@ -56,12 +66,13 @@ public final class CampusAppTest {
                 new SentEmail("mariah.hairam@example.com", subject, body)
           )
     );
-    assertFinalState(expectedFinalState);
+    assertEquals(expectedFinalState, state);
   }
 
   @Test
   public void testSendEmailToGroupRole() {
-    setInitialState(defaultInitialState);
+    final var state = defaultInitialState.copy();
+    final var app = setInitialState(state);
     final var subject = "Hey! Teacher!";
     final var body = "Let them students alone!!";
     app.sendMailToGroupRole("swqa", "teacher", subject, body);
@@ -69,7 +80,6 @@ public final class CampusAppTest {
           defaultInitialState.usersRepositoryState(),
           Set.of(new SentEmail("mariah.hairam@example.com", subject, body))
     );
-    assertFinalState(expectedFinalState);
-
+    assertEquals(expectedFinalState, state);
   }
 }

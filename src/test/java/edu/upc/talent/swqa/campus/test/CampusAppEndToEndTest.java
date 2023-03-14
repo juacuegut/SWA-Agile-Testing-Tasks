@@ -25,6 +25,12 @@ public final class CampusAppEndToEndTest extends DatabaseBackedTest {
   }
 
   @Test
+  public void testCreateGroup(){
+    app.createGroup("bigdata");
+
+  }
+
+  @Test
   public void testSendEmailToGroup() {
     app.sendMailToGroup("swqa", "New campus!", "Hello everyone! We just created a new virtual campus!");
   }
