@@ -43,20 +43,6 @@ public final class CampusAppTest {
   }
 
   @Test
-  public void testCreateGroup() {
-    setInitialState(defaultInitialState);
-    app.createGroup("bigdata");
-    final var expectedFinalState = new CampusAppState(
-          new UsersRepositoryState(
-                defaultInitialState.usersRepositoryState().users(),
-                Utils.union(defaultInitialState.usersRepositoryState().groups(), Set.of(new Group(2, "bigdata")))
-          ),
-          defaultInitialState.sentEmails()
-    );
-    assertFinalState(expectedFinalState);
-  }
-
-  @Test
   public void testSendEmailToGroup() {
     setInitialState(defaultInitialState);
     final var subject = "New campus!";

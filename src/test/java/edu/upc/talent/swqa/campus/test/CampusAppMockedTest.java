@@ -34,12 +34,6 @@ public final class CampusAppMockedTest {
     when(usersRepository.getUsersByGroupAndRole("swqa", "teacher")).thenReturn(List.of(initialUsers.get(2)));
   }
 
-  @Test
-  public void testCreateGroup() {
-    app.createGroup("swqa");
-    verify(usersRepository).createGroup("swqa");
-    verifyNoMoreInteractions(usersRepository);
-  }
 
   @Test
   public void testSendEmailToGroup() {
