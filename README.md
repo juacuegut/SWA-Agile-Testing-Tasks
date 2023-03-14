@@ -25,5 +25,5 @@
 - [ ] Write a test for `CampusApp::createUser` in `CampusAppTest`
 - [ ] Write a test for `CampusApp::createUser` in `CampusAppMockedTest`
 - [ ] Write a test for `CampusApp::createUser` in `CampusAppEndToEndTest` in a way that solves the issue described in question 1. Pay attention to the strategy and patterns you use.
-- [ ] Fix the bug causing `CampusAppEndToEndTest::testCreateUserFailsIfGroupDoesNotExist` to fail
+- [ ] Fix the bug causing `UsersRepositoryTest::testCreateUserFailsIfGroupDoesNotExist` to fail
 - [ ] Write tests for the **one of** the untested methods in UsersRepository (those you identified in question 10)
