@@ -82,4 +82,25 @@ public final class CampusAppTest {
     );
     assertEquals(expectedFinalState, state);
   }
+
+  //Write a test for CampusApp::createUser in CampusAppTest
+  @Test
+  public void testCreateUser() {
+    final var state = defaultInitialState.copy();
+    final var app = setInitialState(state);
+    app.createUser("Peter", "Parker", "peter.parker@example.com", "student", "swqa");
+    final var expectedFinalState = new CampusAppState(
+            new UsersRepositoryState(
+                    Set.of(
+                            new User("1", "John", "Doe", "john.doe@example.com", "student", "swqa"),
+                            new User("2", "Jane", "Doe", "jane.doe@example.com", "student", "swqa"),
+                            new User("3", "Mariah", "Harris", "mariah.hairam@example.com", "teacher", "swqa"),
+                            new User("4", "Peter", "Parker", "peter.parker@example.com", "student", "swqa")
+                    ),
+                    Set.of(new Group(1, "swqa"))
+            ),
+            Set.of()
+    );
+    assertEquals(expectedFinalState, state);
+  }
 }

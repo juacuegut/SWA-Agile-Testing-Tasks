@@ -7,14 +7,18 @@ import java.util.List;
 
 public record InMemoryUsersRepository(UsersRepositoryState state) implements UsersRepository {
 
+  //Fix the bug causing UsersRepositoryTest::testCreateUserFailsIfGroupDoesNotExist to fail
   @Override
   public void createUser(
-        final String name,
-        final String surname,
-        final String email,
-        final String role,
-        final String groupName
+          final String name,
+          final String surname,
+          final String email,
+          final String role,
+          final String groupName
   ) {
+    if (state.groups().stream().noneMatch(group -> group.name().equals(groupName))) {
+      throw new RuntimeException("Group " + groupName + " does not exist");
+    }
     final var id = state.users().size() + 1;
     final var user = new User("" + id, name, surname, email, role, groupName);
     state.users().add(user);

@@ -72,7 +72,6 @@ public interface UsersRepositoryTest {
   }
 
   @Test
-  @Disabled
   default void testCreateUserFailsIfGroupDoesNotExist() {
     setInitialState(defaultInitialState);
     final var groupName = "non-existent";
@@ -82,7 +81,31 @@ public interface UsersRepositoryTest {
     assertEquals("Group " + groupName + " does not exist", exception.getMessage());
     assertExpectedFinalState(defaultInitialState);
   }
+
+  //Write tests for the one of the untested methods in UsersRepository (those you identified in question 10)
+  @Test
+  default void testGetUsersByGroupAndRole() {
+    setInitialState(defaultInitialState);
+    final var actual = getRepository().getUsersByGroupAndRole("swqa", "student");
+    final var expected = Set.of(
+            new User("1", "John", "Doe", "john.doe@example.com", "student", "swqa"),
+            new User("2", "Jane", "Doe", "jane.doe@example.com", "student", "swqa")
+    );
+    assertEquals(expected, new HashSet<>(actual));
+    assertExpectedFinalState(defaultInitialState);
+  }
+
+  @Test
+  default void testGetUsersByGroupAndRoleReturnsEmptyListIfGroupOrRoleNotFound() {
+    setInitialState(defaultInitialState);
+    final var actual1 = getRepository().getUsersByGroupAndRole("swqa", "non-existent");
+    assertEquals(0, actual1.size());
+    final var actual2 = getRepository().getUsersByGroupAndRole("non-existent", "student");
+    assertEquals(0, actual2.size());
+    assertExpectedFinalState(defaultInitialState);
+  }
 }
+
 
 
 

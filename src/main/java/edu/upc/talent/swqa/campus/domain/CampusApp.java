@@ -1,5 +1,7 @@
 package edu.upc.talent.swqa.campus.domain;
 
+import java.util.List;
+
 public final class CampusApp {
 
   private final UsersRepository usersRepository;
@@ -37,5 +39,9 @@ public final class CampusApp {
   public void sendMailToGroup(final String groupName, final String subject, final String body) {
     final var users = usersRepository.getUsersByGroup(groupName);
     users.forEach(u -> emailSender.sendEmail(u.email(), subject, body));
+  }
+
+  public List<User> getUsersByGroupAndRole(final String groupName, final String role) {
+    return usersRepository.getUsersByGroupAndRole(groupName, role);
   }
 }

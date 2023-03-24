@@ -62,4 +62,20 @@ public final class CampusAppMockedTest {
     verify(emailSender).sendEmail("mariah.hairam@example.com", subject, body);
     verifyNoMoreInteractions(emailSender);
   }
+
+  //Write a test for CampusApp::createUser in CampusAppMockedTest
+  @Test
+  public void testCreateUser() {
+    final String name = "Peter";
+    final String surname = "Parker";
+    final String email = "peter.parker@example.com";
+    final String role = "student";
+    final String groupName = "swqa";
+
+    app.createUser(name, surname, email, role, groupName);
+
+    verify(usersRepository).createUser(name, surname, email, role, groupName);
+    verifyNoMoreInteractions(usersRepository);
+    verifyNoMoreInteractions(emailSender);
+  }
 }
